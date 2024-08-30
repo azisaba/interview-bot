@@ -1,4 +1,4 @@
-const { Client, CategoryChannel, OverwriteResolvable, OverwriteData, TextChannel } = require("discord.js")
+const { Client, CategoryChannel, GuildChannel, OverwriteData, TextChannel } = require("discord.js")
 const { ChannelType } = require("discord-api-types/payloads/v10")
 
 /**
@@ -25,4 +25,16 @@ const create = async (client, channel_name, parent_channel, topic,permissions, p
     });
 }
 
+/**
+ * Move a text channel to other category.
+ * @param {TextChannel}channel
+ * @param {CategoryChannel}parent_channel
+ * @param {Object}[option]
+ * @return {Promise<TextChannel>}
+ */
+const move_channel = async (channel, parent_channel, option={lockPermissions: false}) => {
+    return await channel.setParent(parent_channel, option)
+}
+
 exports.creare = create;
+exports.move_channel = move_channel;
