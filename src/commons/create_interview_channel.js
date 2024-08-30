@@ -29,6 +29,7 @@ const create_interview_channel = async (client, interviewee, target_group)=>{
     let target_group_sign = await Group.get_sign(target_group,"nd")
 
     const permissions_record= []
+    permissions_record.push(...(await db.get_all(`SELECT target_id, permission, action, type FROM permissions WHERE "group" LIKE ?`, ["bot"])))
     permissions_record.push(...(await db.get_all(`SELECT target_id, permission, action, type FROM permissions WHERE "group" LIKE ?`, ["common"])))
     permissions_record.push(...(await db.get_all(`SELECT target_id, permission, action, type FROM permissions WHERE "group" LIKE ?`, [target_group_sign])))
 
