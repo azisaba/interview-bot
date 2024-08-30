@@ -1,6 +1,6 @@
 const { Client, CategoryChannel, PermissionsBitField, OverwriteData, TextChannel, User,Collection, EmbedBuilder} = require("discord.js")
 const ChannelOperation = require("../utils/channel")
-const setting = require("../setting")
+const Setting = require("../setting")
 const db = require("../utils/db")
 const Group = require("../utils/group")
 const { ErrorMessage } = require("../utils/error_message")
@@ -13,7 +13,7 @@ const { ErrorMessage } = require("../utils/error_message")
  * @return {Promise<TextChannel|ErrorMessage>}
  */
 const create_interview_channel = async (client, interviewee, target_group)=>{
-    const parent_category_id = await setting.get_value(setting.setting_value.INTERVIEW_CATEGORY_ID)
+    const parent_category_id = await Setting.get_value(Setting.setting_value.INTERVIEW_CATEGORY_ID)
 
     /**
      * @type {CategoryChannel | DMChannel | PartialDMChannel | PartialGroupDMChannel | NewsChannel | StageChannel | TextChannel | PublicThreadChannel<boolean> | PrivateThreadChannel | VoiceChannel | ForumChannel | MediaChannel | ErrorMessage}
