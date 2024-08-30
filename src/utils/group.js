@@ -30,7 +30,7 @@ const get_name = async (sign) => {
  */
 const get_sign = async (name,default_value=undefined) => {
     const res = await db.get_first(`SELECT sign FROM 'groups' WHERE name LIKE ?`, [name])
-    return res["sign"] ? res["sign"] : default_value
+    return res?.sign ? res["sign"] : default_value
 }
 
 /**
