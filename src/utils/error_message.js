@@ -1,6 +1,7 @@
 
-class ErrorMessage{
+class ErrorMessage extends Error{
     constructor(message) {
+        super(message);
         this.message = message
     }
 
