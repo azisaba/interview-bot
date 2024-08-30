@@ -11,11 +11,14 @@ const add_group_subcommand = {
         .addStringOption(option=>
             option.setName("sign")
                 .setDescription("グループを表す2字の英字(小文字)")
-                .setRequired(true))
+                .setRequired(true)
+                .setMinLength(2)
+                .setMaxLength(2))
         .addStringOption(option=>
             option.setName("name")
                 .setDescription("グループの名前(大小英数字)")
-                .setRequired(true)),
+                .setRequired(true)
+                .setMinLength(2)),
     async execute(interaction) {
         const sign = interaction.options.getString('sign');
         const name = interaction.options.getString('name');
@@ -59,10 +62,13 @@ const remove_group_subcommand = {
         .setDescription('グループの消去を行います。')
         .addStringOption(option=>
             option.setName("sign")
-                .setDescription("グループを表す2字の英字(小文字)"))
+                .setDescription("グループを表す2字の英字(小文字)")
+                .setMinLength(2)
+                .setMaxLength(2))
         .addStringOption(option=>
             option.setName("name")
-                .setDescription("グループの名前(大小英数字)")),
+                .setDescription("グループの名前(大小英数字)")
+                .setMinLength(2)),
     async execute(interaction) {
 
         const input_sign = interaction.options.getString('sign');
