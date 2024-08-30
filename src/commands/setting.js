@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, SlashCommandSubcommandBuilder} = require('discord.js');
+const { SlashCommandBuilder, SlashCommandSubcommandBuilder, EmbedBuilder} = require('discord.js');
 const { ChannelType } = require("discord-api-types/payloads/v10")
 const Group = require("../utils/group")
 const Setting = require("../setting")
@@ -21,14 +21,33 @@ const add_group_subcommand = {
         const name = interaction.options.getString('name');
 
         if(sign.length!==2) {
-            await interaction.reply('signが2字ではないです!');
+            const embed = new EmbedBuilder()
+                .setTitle("エラーが発生しました")
+                .setDescription("signが2字ではありません。")
+                .setColor('#ea5a59')
+                .setTimestamp()
+
+            await interaction.reply({embeds: [embed], ephemeral: true});
         }
 
         try{
             Group.set(sign, name)
-            await interaction.reply('追加されました');
+
+            const embed = new EmbedBuilder()
+                .setTitle("グループが追加されました。")
+                .setDescription(`グループ名 > ${name}\nサイン > ${sign}`)
+                .setColor('#a7f1a9')
+                .setTimestamp()
+
+            await interaction.reply({embeds: [embed], ephemeral: true});
         }catch (e) {
-            await interaction.reply(e.toString());
+            const embed = new EmbedBuilder()
+                .setTitle("エラーが発生しました")
+                .setDescription(e.toString())
+                .setColor('#ea5a59')
+                .setTimestamp()
+
+            await interaction.reply({embeds: [embed], ephemeral: true});
         }
 
     },
@@ -50,7 +69,13 @@ const remove_group_subcommand = {
         const name = interaction.options.getString('name');
 
         if(input_sign && input_sign.length!==2) {
-            await interaction.reply('signが2字ではないです!');
+            const embed = new EmbedBuilder()
+                .setTitle("エラーが発生しました")
+                .setDescription("signが2字ではありません。")
+                .setColor('#ea5a59')
+                .setTimestamp()
+
+            await interaction.reply({embeds: [embed], ephemeral: true});
         }
 
         const sign = input_sign ? input_sign : await Group.get_sign(name)
@@ -59,10 +84,22 @@ const remove_group_subcommand = {
             if(!sign) throw new Error(`"sign" is not found.`)
             Group.remove(sign)
         }catch (e) {
-            await interaction.reply(e.toString());
+            const embed = new EmbedBuilder()
+                .setTitle("エラーが発生しました")
+                .setDescription(e.toString())
+                .setColor('#ea5a59')
+                .setTimestamp()
+
+            await interaction.reply({embeds: [embed], ephemeral: true});
         }
 
-        await interaction.reply('削除されました');
+        const embed = new EmbedBuilder()
+            .setTitle("グループが削除されました。")
+            .setDescription(`グループ名 > ${name}\nサイン > ${sign}`)
+            .setColor('#f3ad9d')
+            .setTimestamp()
+
+        await interaction.reply({embeds: [embed], ephemeral: true});
     },
 }
 
@@ -96,13 +133,32 @@ const set_channel_subcommand = {
                 (Setting.setting_values_channels_type[key]===ChannelType.GuildCategory && channel.type === ChannelType.GuildCategory)
             ){
                 Setting.set_value(key, channel.id)
-                await interaction.reply('設定されました');
+
+                const embed = new EmbedBuilder()
+                    .setTitle("チャンネルを設定しました。")
+                    .setDescription(`Key > ${key}\n設定値 > <#${channel.id}>`)
+                    .setColor('#a7f1a9')
+                    .setTimestamp()
+
+                await interaction.reply({embeds: [embed], ephemeral: true});
             } else {
-                await interaction.reply('指定されたkeyが期待するチャンネルタイプと指定されたチャンネルが一致しません。');
+                const embed = new EmbedBuilder()
+                    .setTitle("エラーが発生しました")
+                    .setDescription("指定されたkeyが期待するチャンネルタイプと指定されたチャンネルが一致しません。")
+                    .setColor('#ea5a59')
+                    .setTimestamp()
+
+                await interaction.reply({embeds: [embed], ephemeral: true});
             }
         }catch (e) {
-            if(e.code==="CommandInteractionOptionInvalidChannelType") return await interaction.reply('チャンネルのタイプが不正です。');
-            await interaction.reply('エラーが発生しました。');
+            const embed = new EmbedBuilder()
+                .setTitle("エラーが発生しました")
+                .setColor('#ea5a59')
+                .setTimestamp()
+
+            if(e.code==="CommandInteractionOptionInvalidChannelType") embed.setDescription('チャンネルのタイプが不正です。');
+
+            await interaction.reply({embeds: [embed], ephemeral: true});
         }
     },
 };

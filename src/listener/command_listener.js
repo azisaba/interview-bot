@@ -1,4 +1,4 @@
-const { Client } = require("discord.js")
+const { Client, EmbedBuilder} = require("discord.js")
 const fs = require("fs")
 
 /**
@@ -19,7 +19,13 @@ module.exports = (client)=>{
             await command.execute(interaction);
         } catch (error) {
             console.error(error);
-            await interaction.reply({ content: 'エラーが発生しました。', ephemeral: true });
+            const embed = new EmbedBuilder()
+                .setTitle("エラーが発生しました")
+                .setDescription("コマンド実行中にエラーが発生しました。")
+                .setColor('#ea5a59')
+                .setTimestamp()
+
+            await interaction.reply({embeds: [embed], ephemeral: true});
         }
     });
 }

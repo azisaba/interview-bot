@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder} = require('discord.js');
 const { move_archive_category } = require("../commons/move_archive_category")
 const { ChannelType } = require("discord-api-types/payloads/v10")
 
@@ -19,10 +19,24 @@ module.exports = {
 
         try{
             await move_archive_category(target_channel)
-            await interaction.reply('チャンネルをアーカイブしました。');
+            const embed = new EmbedBuilder()
+                .setTitle("チャンネルをアーカイブしました。")
+                .setDescription(
+                    `チャンネル > <#${target_channel.id}>`)
+                .setColor('#9aec9f')
+                .setTimestamp()
+
+            await interaction.reply({embeds: [embed], ephemeral: true});
         }catch (e) {
-            console.log(e)
-            await interaction.reply(e.get_message());
+            console.error(e)
+
+            const embed = new EmbedBuilder()
+                .setTitle("エラーが発生しました")
+                .setDescription(e instanceof ErrorMessage ? e.get_message(): "")
+                .setColor('#ea5a59')
+                .setTimestamp()
+
+            await interaction.reply({embeds: [embed], ephemeral: true});
         }
     },
 };

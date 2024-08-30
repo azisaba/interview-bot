@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder} = require('discord.js');
 const { add_controlling_channel } = require("../commons/controlling-channel")
 const { ChannelType } = require("discord-api-types/payloads/v10")
 const Setting = require("../setting");
@@ -32,10 +32,27 @@ module.exports = {
 
         try{
             await add_controlling_channel(target_channel, state)
-            await interaction.reply('チャンネルを管理対象に追加しました。');
+
+            const embed = new EmbedBuilder()
+                .setTitle("チャンネルを管理対象に追加しました。")
+                .setDescription(
+                    `チャンネル > <#${target_channel.id}>\n
+                    状態 > ${state===ControllingChannelState.ACTIVE ? "アクティブ" : "非アクティブ"}\n\n
+                    ・権限等の設定はされませんので、手動で行ってください。`)
+                .setColor('#9aec9f')
+                .setTimestamp()
+
+            await interaction.reply({embeds: [embed], ephemeral: true});
         }catch (e) {
-            console.log(e)
-            await interaction.reply(e.get_message());
+            console.error(e)
+
+            const embed = new EmbedBuilder()
+                .setTitle("エラーが発生しました")
+                .setDescription(e instanceof ErrorMessage ? e.get_message(): "")
+                .setColor('#ea5a59')
+                .setTimestamp()
+
+            await interaction.reply({embeds: [embed], ephemeral: true});
         }
     },
 };
