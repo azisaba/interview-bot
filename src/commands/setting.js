@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, SlashCommandSubcommandBuilder} = require('discord.js');
+const { ChannelType } = require("discord-api-types/payloads/v10")
 const Group = require("../utils/group")
-
+const Setting = require("../setting")
 
 
 const add_group_subcommand = {
@@ -16,7 +17,6 @@ const add_group_subcommand = {
                 .setDescription("グループの名前(大小英数字)")
                 .setRequired(true)),
     async execute(interaction) {
-
         const sign = interaction.options.getString('sign');
         const name = interaction.options.getString('name');
 
@@ -66,41 +66,57 @@ const remove_group_subcommand = {
     },
 }
 
-/**
-module.exports = {
-    data: new SlashCommandBuilder()
-        .setName('setting')
-        .setDescription('設定の変更を行います。')
-        .addSubcommand(group_subcommand)
+const set_channel_subcommand = {
+    data: new SlashCommandSubcommandBuilder()
+        .setName('set-channel')
+        .setDescription('チャンネルの設定を行います。')
         .addStringOption(option=>
             option.setName("key")
                 .setDescription("設定する項目")
                 .setRequired(true)
                 .addChoices(
-                    { name: 'システムログチャンネル', value: 'SYSTEM_LOG_CHANNEL_ID' },
-                    { name: 'チャットログチャンネル', value: 'CHAT_LOG_CHANNEL_ID' },
+                    { name: 'システムログチャンネル', value: Setting.setting_value.SYSTEM_LOG_CHANNEL_ID },
+                    { name: 'チャットログチャンネル', value: Setting.setting_value.CHAT_LOG_CHANNEL_ID },
+                    { name: '面接チャンネルカテゴリー', value: Setting.setting_value.INTERVIEW_CATEGORY_ID },
+                    { name: '面接チャンネル アーカイブカテゴリー', value: Setting.setting_value.ARCHIVE_INTERVIEW_CHANNEL_CATEGORY_ID },
                 ))
-        .addStringOption(option=>
-            option.setName("value")
-                .setDescription("設定する値")),
+        .addChannelOption(option=>
+            option.setName("channel")
+                .setDescription("設定するチャンネル")
+                .setRequired(true)
+        ),
 
     async execute(interaction) {
-        console.log(interaction.options.getString('key'), interaction.options.getString('value'))
-        await interaction.reply('Pong!');
+        const key = interaction.options.getString('key')
+        try {
+            const channel = interaction.options.getChannel("channel", true, [ChannelType.GuildText, ChannelType.GuildCategory])
+
+            if( (Setting.setting_values_channels_type[key]===ChannelType.GuildText && channel.type === ChannelType.GuildText) ||
+                (Setting.setting_values_channels_type[key]===ChannelType.GuildCategory && channel.type === ChannelType.GuildCategory)
+            ){
+                Setting.set_value(key, channel.id)
+                await interaction.reply('設定されました');
+            } else {
+                await interaction.reply('指定されたkeyが期待するチャンネルタイプと指定されたチャンネルが一致しません。');
+            }
+        }catch (e) {
+            if(e.code==="CommandInteractionOptionInvalidChannelType") return await interaction.reply('チャンネルのタイプが不正です。');
+            await interaction.reply('エラーが発生しました。');
+        }
     },
 };
-    **/
+
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('setting')
         .setDescription('設定の変更を行います。')
         .addSubcommand(add_group_subcommand.data)
-        .addSubcommand(remove_group_subcommand.data),
+        .addSubcommand(remove_group_subcommand.data)
+        .addSubcommand(set_channel_subcommand.data),
     async execute(interaction) {
         if (interaction.options.getSubcommand() === 'add-group') await add_group_subcommand.execute(interaction)
         if (interaction.options.getSubcommand() === 'remove-group') await remove_group_subcommand.execute(interaction)
+        if (interaction.options.getSubcommand() === 'set-channel') await set_channel_subcommand.execute(interaction)
     },
 };
-
-

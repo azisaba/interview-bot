@@ -1,10 +1,11 @@
+const { ChannelType } = require("discord-api-types/payloads/v10")
 const db = require("./utils/db")
 
-const setting_value_keys = {
-    SYSTEM_LOG_CHANNEL_ID: "channel",
-    CHAT_LOG_CHANNEL_ID: "channel",
-    INTERVIEW_CATEGORY_ID: "category",
-    ARCHIVE_INTERVIEW_CHANNEL_CATEGORY_ID: "category",
+const setting_values_channels_type = {
+    SYSTEM_LOG_CHANNEL_ID: ChannelType.GuildText,
+    CHAT_LOG_CHANNEL_ID: ChannelType.GuildText,
+    INTERVIEW_CATEGORY_ID: ChannelType.GuildCategory,
+    ARCHIVE_INTERVIEW_CHANNEL_CATEGORY_ID: ChannelType.GuildCategory,
 }
 
 /**
@@ -19,7 +20,7 @@ const setting_value = {
 }
 
 const init = async () => {
-    for(let key in setting_value_keys){
+    for(let key in setting_value){
         const res = await db.get_first("SELECT * FROM setting_values WHERE key LIKE ?", [key])
         if(res) continue;
         db.execute("INSERT INTO setting_values(key, value) VALUES (?,?)", [key, null])
@@ -46,6 +47,7 @@ const get_value = async (key)=>{
 }
 
 
+exports.setting_values_channels_type = setting_values_channels_type
 exports.setting_value = setting_value
 exports.init = init
 exports.set_value = set_value
