@@ -83,6 +83,7 @@ const set_channel_subcommand = {
         .addChannelOption(option=>
             option.setName("channel")
                 .setDescription("設定するチャンネル")
+                .addChannelTypes(ChannelType.GuildText, ChannelType.GuildCategory)
                 .setRequired(true)
         ),
 
