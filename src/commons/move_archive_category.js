@@ -2,7 +2,7 @@ const { TextChannel } = require("discord.js")
 const ChannelOperation = require("../utils/channel")
 const Setting = require("../setting")
 const db = require("../utils/db")
-const { ErrorMessage } = require("../utils/error_message")
+const { ErrorMessage, ErrorCode } = require("../utils/error_message")
 
 
 /**
@@ -13,10 +13,10 @@ const { ErrorMessage } = require("../utils/error_message")
  */
 const move_archive_category = async (target_channel)=>{
     const res = await db.get_first(`SELECT state FROM channels WHERE channel_id LIKE ?`, [target_channel.id])
-    console.log(res)
-    if(!res) throw new ErrorMessage('チャンネルが存在しません。');
-    if(res.state === "inactive") throw new ErrorMessage('チャンネルは既にアーカイブされています。');
-    console.log(res.state === "inactive")
+
+    if(!res) throw new ErrorMessage(ErrorCode.NotExistChannel,'チャンネルが存在しません。');
+    if(res.state === "inactive") throw new ErrorMessage(ErrorCode.AlreadyArchivedChannel,'チャンネルは既にアーカイブされています。');
+
     db.execute(`UPDATE channels SET state='inactive' WHERE channels.channel_id LIKE ?`, [target_channel.id])
 
     const archive_category_id = await db.get_first(`SELECT value FROM setting_values WHERE key LIKE ?`,

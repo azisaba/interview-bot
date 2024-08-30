@@ -1,4 +1,5 @@
 const db = require("../utils/db")
+const {ErrorMessage, ErrorCode} = require("./error_message");
 
 const no_use_word = ["common", "interviewee"]
 /**
@@ -43,9 +44,11 @@ const get_all = async () => {
 /**
  *
  * @param {string} sign
+ * @throws {ErrorMessage}
  */
-const remove = (sign) => {
-    if(no_use_word.includes(name.toLowerCase()) || no_use_word.includes(sign.toLowerCase())) throw new Error();
+const remove = async (sign) => {
+    if(no_use_word.includes(name.toLowerCase()) || no_use_word.includes(sign.toLowerCase())) throw new ErrorMessage("UseNotAllowedWord", "This word is not allowed.");
+    if(!(await get_name(sign))) throw new ErrorMessage(ErrorCode.NotExistGroupSign, `The specified Sign “${sign}” was not found.`)
     return db.execute(`DELETE FROM 'groups' WHERE sign LIKE ?`, [sign])
 }
 

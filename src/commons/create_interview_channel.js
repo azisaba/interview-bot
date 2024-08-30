@@ -4,6 +4,7 @@ const Setting = require("../setting")
 const db = require("../utils/db")
 const Group = require("../utils/group")
 const { ErrorMessage } = require("../utils/error_message")
+const { ErrorMessage, ErrorCode } = require("../utils/error_message")
 
 /**
  *
@@ -20,7 +21,7 @@ const create_interview_channel = async (client, interviewee, target_group)=>{
      */
     const parent_category = await client.channels.fetch(parent_category_id)
         .catch(e=>{
-            return new ErrorMessage(`カテゴリの取得に失敗しました。\nMessage:\`\`\`${e}\`\`\``)
+            return new ErrorMessage(ErrorCode.FailToGetCategory,`カテゴリの取得に失敗しました。\nMessage:\`\`\`${e}\`\`\``)
         })
 
     if(parent_category instanceof ErrorMessage) return parent_category;
@@ -89,7 +90,7 @@ const create_interview_channel = async (client, interviewee, target_group)=>{
 
         return channel
     }catch (e){
-        return new ErrorMessage(`チャンネルの作成に失敗しました。\nMessage:\`\`\`${e}\`\`\``)
+        return new ErrorMessage(ErrorCode.FailToCreateChannel,`チャンネルの作成に失敗しました。\nMessage:\`\`\`${e}\`\`\``)
     }
 }
 

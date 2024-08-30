@@ -1,7 +1,8 @@
 
 class ErrorMessage extends Error{
-    constructor(message) {
+    constructor(code, message) {
         super(message);
+        this.code = code;
         this.message = message
     }
 
@@ -10,4 +11,17 @@ class ErrorMessage extends Error{
     }
 }
 
+/**
+ * @enum {string}
+ */
+const ErrorCode = {
+    ExistChannel: "ExistChannel",
+    FailToGetCategory: "FailToGetCategory",
+    FailToCreateChannel: "FailToCreateChannel",
+    NotExistChannel: "NotExistChannel",
+    NotExistGroupSign: "NotExistGroupSign",
+    AlreadyArchivedChannel: "AlreadyArchivedChannel"
+}
+
 exports.ErrorMessage = ErrorMessage
+exports.ErrorCode = ErrorCode
