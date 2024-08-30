@@ -79,8 +79,8 @@ const create_interview_channel = async (client, interviewee, target_group)=>{
         )
 
         const embed = new EmbedBuilder()
-            .setTitle("チャンネルを作成しました")
-            .setColor('#06f919')
+            .setDescription(await Setting.get_value(Setting.setting_value.INTERVIEW_CHANNEL_ANNOUNCEMENT_MESSAGE))
+            .setColor('#e2b4ee')
             .setTimestamp()
 
         await channel.send({embeds: [embed]})
