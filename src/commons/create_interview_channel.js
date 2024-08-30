@@ -3,7 +3,7 @@ const ChannelOperation = require("../utils/channel")
 const Setting = require("../setting")
 const db = require("../utils/db")
 const Group = require("../utils/group")
-const { ErrorMessage } = require("../utils/error_message")
+const ControllingChannelState = require("../utils/controlling_channel_state")
 const { ErrorMessage, ErrorCode } = require("../utils/error_message")
 
 /**
@@ -86,7 +86,7 @@ const create_interview_channel = async (client, interviewee, target_group)=>{
 
         await channel.send({embeds: [embed]})
 
-        db.execute(`INSERT INTO channels(channel_id, state) VALUES (?,?)`, [channel.id, "active"])
+        db.execute(`INSERT INTO channels(channel_id, state) VALUES (?,?)`, [channel.id, ControllingChannelState.ACTIVE])
 
         return channel
     }catch (e){
