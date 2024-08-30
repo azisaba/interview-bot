@@ -1,7 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { move_archive_category } = require("../commons/move_archive_category")
 const { ChannelType } = require("discord-api-types/payloads/v10")
-const db = require("../utils/db")
 
 module.exports = {
     data: new SlashCommandBuilder()
