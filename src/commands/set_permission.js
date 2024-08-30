@@ -4,9 +4,11 @@ const { ChannelType, PermissionFlagsBits } = require("discord-api-types/payloads
 const {ErrorMessage} = require("../utils/error_message");
 const ControllingChannelState = require("../utils/controlling_channel_state");
 const {set_interviewee_permission, set_bot_permission, set_common_permission, set_group_permission,
-    set_all_interviewee_permission, set_all_bot_permission, set_all_common_permission, set_all_group_permission
+    set_all_interviewee_permission, set_all_bot_permission, set_all_common_permission, set_all_group_permission,
+    set_exist_interviewee_permissions, set_exist_bot_permissions, set_exist_common_permission, set_exist_group_permission,
+    clone_permissions_from_exist_permissions
 } = require("../commons/control_permission")
-const {PermissionActions, get_permission_node_command_choices_format } = require("../utils/permission")
+const {PermissionActions, PermissionNodes, get_permission_node_command_choices_format } = require("../utils/permission")
 const Group = require("../utils/group");
 const Setting = require("../setting");
 
@@ -36,7 +38,8 @@ const set_interviewee_permission_subcommand = {
         const action = interaction.options.getString('action')
 
         try{
-            if(node === "All") await set_all_interviewee_permission(action)
+            if(node === PermissionNodes.All) await set_all_interviewee_permission(action)
+            else if(node === PermissionNodes.ExistAll) await set_exist_interviewee_permissions(action)
             else await set_interviewee_permission(node, action)
 
             const embed = new EmbedBuilder()
@@ -84,7 +87,8 @@ const set_bot_permission_subcommand = {
         const action = interaction.options.getString('action')
 
         try{
-            if(node === "All") await set_all_bot_permission(action)
+            if(node === PermissionNodes.All) await set_all_bot_permission(action)
+            else if(node === PermissionNodes.ExistAll) await set_exist_bot_permissions(action)
             else await set_bot_permission(node, action)
 
             const embed = new EmbedBuilder()
@@ -139,7 +143,8 @@ const set_common_user_permission_subcommand = {
         const user = interaction.options.getUser('user')
 
         try{
-            if(node === "All") await set_all_common_permission(action, user.id, OverwriteType.Member)
+            if(node === PermissionNodes.All) await set_all_common_permission(action, user.id, OverwriteType.Member)
+            else if(node === PermissionNodes.ExistAll) await set_exist_common_permission(action, user.id, OverwriteType.Member)
             else await set_common_permission(node, action, user.id, OverwriteType.Member)
 
             const embed = new EmbedBuilder()
@@ -194,7 +199,8 @@ const set_common_role_permission_subcommand = {
         const role = interaction.options.getRole('role')
 
         try{
-            if(node === "All") await set_all_common_permission(action, role.id, OverwriteType.Role)
+            if(node === PermissionNodes.All) await set_all_common_permission(action, role.id, OverwriteType.Role)
+            else if(node === PermissionNodes.ExistAll) await set_exist_common_permission(action, role.id, OverwriteType.Role)
             else await set_common_permission(node, action, role.id, OverwriteType.Role)
 
             const embed = new EmbedBuilder()
@@ -256,7 +262,8 @@ const set_group_permission_subcommand = {
         const group = interaction.options.getString('group')
 
         try{
-            if(node === "All") await set_all_group_permission(action, group, role.id, OverwriteType.Role)
+            if(node === PermissionNodes.All) await set_all_group_permission(action, group, role.id, OverwriteType.Role)
+            else if(node === PermissionNodes.ExistAll) await set_exist_group_permission(action, group, role.id, OverwriteType.Role)
             else await set_group_permission(node, action, group,role.id, OverwriteType.Role)
 
             const embed = new EmbedBuilder()
@@ -276,7 +283,50 @@ const set_group_permission_subcommand = {
 
             await interaction.reply({embeds: [embed], ephemeral: true});
         }
+    },
+}
 
+const clone_permissions_subcommand = {
+    data: new SlashCommandSubcommandBuilder()
+        .setName('clone')
+        .setDescription('パーミッションの複製を行います。')
+        .addStringOption(option=>
+            option.setName("origin-group")
+                .setDescription("パーミッションの複製元のグループ名")
+                .setMinLength(2)
+                .setRequired(true)
+        )
+        .addStringOption(option=>
+            option.setName("target-group")
+                .setDescription("パーミッションの複製先のグループ名")
+                .setMinLength(2)
+                .setRequired(true)
+        )
+    ,
+    async execute(interaction) {
+        const origin_group = interaction.options.getString('origin-group')
+        const target_group = interaction.options.getString('target-group')
+
+        try{
+            await clone_permissions_from_exist_permissions(origin_group, target_group)
+
+            const embed = new EmbedBuilder()
+                .setTitle("パーミッションが複製されました。")
+                .setDescription(`複製元 > ${origin_group}\n複製先> ${target_group}\n`)
+                .setColor('#a7f1a9')
+                .setTimestamp()
+
+            await interaction.reply({embeds: [embed], ephemeral: true});
+        }catch (e) {
+            console.error(e)
+            const embed = new EmbedBuilder()
+                .setTitle("エラーが発生しました")
+                .setDescription(e.toString())
+                .setColor('#ea5a59')
+                .setTimestamp()
+
+            await interaction.reply({embeds: [embed], ephemeral: true});
+        }
     },
 }
 
@@ -289,6 +339,7 @@ module.exports = {
         .addSubcommand(set_common_user_permission_subcommand.data)
         .addSubcommand(set_common_role_permission_subcommand.data)
         .addSubcommand(set_group_permission_subcommand.data)
+        .addSubcommand(clone_permissions_subcommand.data)
     ,
     async execute(interaction) {
         if (interaction.options.getSubcommand() === 'interviewee') await set_interviewee_permission_subcommand.execute(interaction)
@@ -296,5 +347,6 @@ module.exports = {
         if (interaction.options.getSubcommand() === 'common-user') await set_common_user_permission_subcommand.execute(interaction)
         if (interaction.options.getSubcommand() === 'common-role') await set_common_role_permission_subcommand.execute(interaction)
         if (interaction.options.getSubcommand() === 'group')       await set_group_permission_subcommand.execute(interaction)
+        if (interaction.options.getSubcommand() === 'clone')       await clone_permissions_subcommand.execute(interaction)
     },
 };
