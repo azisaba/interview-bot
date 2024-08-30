@@ -82,7 +82,7 @@ const remove_group_subcommand = {
 
         try{
             if(!sign) throw new Error(`"sign" is not found.`)
-            Group.remove(sign)
+            await Group.remove(sign)
         }catch (e) {
             const embed = new EmbedBuilder()
                 .setTitle("エラーが発生しました")
