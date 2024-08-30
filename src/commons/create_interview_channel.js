@@ -85,6 +85,8 @@ const create_interview_channel = async (client, interviewee, target_group)=>{
 
         await channel.send({embeds: [embed]})
 
+        db.execute(`INSERT INTO channels(channel_id, state) VALUES (?,?)`, [channel.id, "active"])
+
         return channel
     }catch (e){
         return new ErrorMessage(`チャンネルの作成に失敗しました。\nMessage:\`\`\`${e}\`\`\``)

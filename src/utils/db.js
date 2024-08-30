@@ -23,6 +23,7 @@ const init = ()=>{
             db.run('CREATE TABLE IF NOT EXISTS setting_values (key TEXT PRIMARY KEY, value TEXT)');
             db.run('CREATE TABLE IF NOT EXISTS permissions (id INTEGER PRIMARY KEY AUTOINCREMENT, "group" TEXT, target_id TEXT, permission TEXT, action TEXT, type INTEGER)',()=>resolve());
             db.run('CREATE TABLE IF NOT EXISTS groups (sign TEXT PRIMARY KEY, name TEXT UNIQUE)');
+            db.run('CREATE TABLE IF NOT EXISTS channels (id INTEGER PRIMARY KEY AUTOINCREMENT, "channel_id" TEXT, state TEXT)');
         })
 
         db.close()
