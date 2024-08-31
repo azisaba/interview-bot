@@ -38,7 +38,10 @@ const add_group_subcommand = {
 
             const embed = new EmbedBuilder()
                 .setTitle("グループが追加されました。")
-                .setDescription(`グループ名 > ${name}\nサイン > ${sign}`)
+                .setFields(
+                    {name: "グループ名", value: `${name}`},
+                    {name: "サイン", value: `${sign}`},
+                )
                 .setColor('#a7f1a9')
                 .setTimestamp()
 
@@ -101,7 +104,10 @@ const remove_group_subcommand = {
 
         const embed = new EmbedBuilder()
             .setTitle("グループが削除されました。")
-            .setDescription(`グループ名 > ${name}\nサイン > ${sign}`)
+            .setFields(
+                {name: "グループ名", value: `${name}`},
+                {name: "サイン", value: `${sign}`},
+            )
             .setColor('#f3ad9d')
             .setTimestamp()
 
@@ -142,7 +148,10 @@ const set_channel_subcommand = {
 
                 const embed = new EmbedBuilder()
                     .setTitle("チャンネルを設定しました。")
-                    .setDescription(`Key > ${key}\n設定値 > <#${channel.id}>`)
+                    .setFields(
+                        {name: "Key", value: `${key}`},
+                        {name: "設定値", value: `<#${channel.id}>`},
+                    )
                     .setColor('#a7f1a9')
                     .setTimestamp()
 

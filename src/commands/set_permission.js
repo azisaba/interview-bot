@@ -1,7 +1,7 @@
-const { SlashCommandBuilder, EmbedBuilder, SlashCommandSubcommandBuilder, OverwriteType} = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, SlashCommandSubcommandBuilder, OverwriteType } = require('discord.js');
 const { move_archive_category } = require("../commons/move_archive_category")
 const { ChannelType, PermissionFlagsBits } = require("discord-api-types/payloads/v10")
-const {ErrorMessage} = require("../utils/error_message");
+const { ErrorMessage } = require("../utils/error_message");
 const ControllingChannelState = require("../utils/controlling_channel_state");
 const {set_interviewee_permission, set_bot_permission, set_common_permission, set_group_permission,
     set_all_interviewee_permission, set_all_bot_permission, set_all_common_permission, set_all_group_permission,
@@ -44,7 +44,12 @@ const set_interviewee_permission_subcommand = {
 
             const embed = new EmbedBuilder()
                 .setTitle("パーミッションが設定されました。")
-                .setDescription(`対象 > 面接するユーザ\nパーミッションノード > ${node}\nアクション > ${action}`)
+                .setFields(
+                    {name: "対象", value: `面接するユーザ(interviewee)`},
+                    {name: "パーミッションノード", value: `${node}`},
+                    {name: "アクション", value: `${action}`},
+                    {name: " ", value: `※既存のチャンネルの権限設定は変更されませんので、手動で行ってください。`},
+                )
                 .setColor('#a7f1a9')
                 .setTimestamp()
 
@@ -93,7 +98,12 @@ const set_bot_permission_subcommand = {
 
             const embed = new EmbedBuilder()
                 .setTitle("パーミッションが設定されました。")
-                .setDescription(`　　　　対象　　　　　 > bot\nパーミッションノード > ${node}\n　　アクション　　　 > ${action}`)
+                .setFields(
+                    {name: "対象", value: `bot`},
+                    {name: "パーミッションノード", value: `${node}`},
+                    {name: "アクション", value: `${action}`},
+                    {name: " ", value: `※既存のチャンネルの権限設定は変更されませんので、手動で行ってください。`},
+                )
                 .setColor('#a7f1a9')
                 .setTimestamp()
 
@@ -149,7 +159,12 @@ const set_common_user_permission_subcommand = {
 
             const embed = new EmbedBuilder()
                 .setTitle("パーミッションが設定されました。")
-                .setDescription(`　　　　対象　　　　　 > <@${user.id}>\nパーミッションノード > ${node}\n　　アクション　　　 > ${action}`)
+                .setFields(
+                    {name: "対象", value: `<@${user.id}>`},
+                    {name: "パーミッションノード", value: `${node}`},
+                    {name: "アクション", value: `${action}`},
+                    {name: " ", value: `※既存のチャンネルの権限設定は変更されませんので、手動で行ってください。`},
+                )
                 .setColor('#a7f1a9')
                 .setTimestamp()
 
@@ -205,7 +220,12 @@ const set_common_role_permission_subcommand = {
 
             const embed = new EmbedBuilder()
                 .setTitle("パーミッションが設定されました。")
-                .setDescription(`　　　　対象　　　　　 > <@&${role.id}>\nパーミッションノード > ${node}\n　　アクション　　　 > ${action}`)
+                .setFields(
+                    {name: "対象", value: `<@&${role.id}>`},
+                    {name: "パーミッションノード", value: `${node}`},
+                    {name: "アクション", value: `${action}`},
+                    {name: " ", value: `※既存のチャンネルの権限設定は変更されませんので、手動で行ってください。`},
+                )
                 .setColor('#a7f1a9')
                 .setTimestamp()
 
@@ -268,7 +288,12 @@ const set_group_permission_subcommand = {
 
             const embed = new EmbedBuilder()
                 .setTitle("パーミッションが設定されました。")
-                .setDescription(`　　　　対象　　　　　 > <@&${role.id}>\nパーミッションノード > ${node}\n　　アクション　　　 > ${action}`)
+                .setFields(
+                    {name: "対象", value: `<@&${role.id}>`},
+                    {name: "パーミッションノード", value: `${node}`},
+                    {name: "アクション", value: `${action}`},
+                    {name: " ", value: `※既存のチャンネルの権限設定は変更されませんので、手動で行ってください。`},
+                )
                 .setColor('#a7f1a9')
                 .setTimestamp()
 
@@ -308,11 +333,16 @@ const clone_permissions_subcommand = {
         const target_group = interaction.options.getString('target-group')
 
         try{
-            await clone_permissions_from_exist_permissions(origin_group, target_group)
+            const permission_nodes = await clone_permissions_from_exist_permissions(origin_group, target_group)
 
             const embed = new EmbedBuilder()
                 .setTitle("パーミッションが複製されました。")
                 .setDescription(`複製元 > ${origin_group}\n複製先> ${target_group}\n`)
+                .setFields(
+                    {name: "複製元", value: `${origin_group}`},
+                    {name: "複製先", value: `${target_group}`},
+                    {name: "複製されたパーミッションノード", value: `${permission_nodes.map(v=>{return `${v.permission}: ${v.action}`}).join("\n")}`},
+                )
                 .setColor('#a7f1a9')
                 .setTimestamp()
 

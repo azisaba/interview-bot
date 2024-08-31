@@ -1,7 +1,8 @@
-const { SlashCommandBuilder, EmbedBuilder} = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { move_archive_category } = require("../commons/move_archive_category")
 const { ChannelType } = require("discord-api-types/payloads/v10")
 const {ErrorMessage} = require("../utils/error_message");
+const { ErrorMessage } = require("../utils/error_message");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -22,8 +23,9 @@ module.exports = {
             await move_archive_category(target_channel)
             const embed = new EmbedBuilder()
                 .setTitle("チャンネルをアーカイブしました。")
-                .setDescription(
-                    `チャンネル > <#${target_channel.id}>`)
+                .setFields(
+                    {name: "チャンネル", value: `<#${target_channel.id}>`},
+                )
                 .setColor('#9aec9f')
                 .setTimestamp()
 

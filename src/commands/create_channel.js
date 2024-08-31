@@ -1,7 +1,8 @@
-const { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder} = require('discord.js');
+const { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder } = require('discord.js');
 const create_interview_channel = require("../commons/create_interview_channel")
 const Group = require("../utils/group")
 const {ErrorMessage} = require("../utils/error_message");
+const { ErrorMessage } = require("../utils/error_message");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -41,7 +42,11 @@ module.exports = {
 
         const embed = new EmbedBuilder()
             .setTitle("チャンネルの作成が完了しました")
-            .setDescription(`チャンネル >  <#${channel.id}>\n面接ユーザ >  <@${interaction.options.getUser("interviewee").id}>\nサーバー　 >  ${interaction.options.getString('server')}`)
+            .setFields(
+                {name: "チャンネル", value: `<#${channel.id}>`},
+                {name: "面接するユーザ", value: `<@${interaction.options.getUser("interviewee").id}>`},
+                {name: "グループ", value: `${interaction.options.getString('server')}`},
+            )
             .setColor('#9aec9f')
             .setTimestamp()
 
