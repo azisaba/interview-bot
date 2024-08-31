@@ -20,7 +20,8 @@ const ErrorCode = {
     FailToCreateChannel: "FailToCreateChannel",
     NotExistChannel: "NotExistChannel",
     NotExistGroupSign: "NotExistGroupSign",
-    AlreadyArchivedChannel: "AlreadyArchivedChannel"
+    AlreadyArchivedChannel: "AlreadyArchivedChannel",
+    NotAllowedWord: "NotAllowedWord"
 }
 
 exports.ErrorMessage = ErrorMessage

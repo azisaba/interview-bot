@@ -7,10 +7,8 @@ const no_use_word = ["common", "interviewee", "bot"]
  * @param {string} sign
  * @param {string} name
  */
-const set = (sign, name)=> {
-    if(no_use_word.includes(name.toLowerCase()) || no_use_word.includes(sign.toLowerCase())) throw new Error();
-    db.execute(`INSERT INTO groups(sign, name) VALUES (?,?)`, [sign, name])
 const set = async (sign, name)=> {
+    if(no_use_word.includes(name.toLowerCase()) || no_use_word.includes(sign.toLowerCase())) throw new ErrorMessage(ErrorCode.NotAllowedWord, "使用できない単語を指定しています。");
 
     const records = await db.get_all(`SELECT * FROM groups WHERE sign=? OR name=?`, [sign, name])
 
