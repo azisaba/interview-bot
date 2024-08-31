@@ -24,10 +24,12 @@ module.exports = {
      * @return {Promise<void>}
      */
     async execute(interaction) {
+        const interviewee = interaction.options.getUser("interviewee")
+        const server = interaction.options.getString('server')
         const channel = await create_interview_channel.create_interview_channel(
             interaction.client,
-            interaction.options.getUser("interviewee"),
-            interaction.options.getString('server')
+            interviewee,
+            server
         )
 
         if(channel instanceof ErrorMessage){
