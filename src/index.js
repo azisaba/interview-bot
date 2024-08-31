@@ -5,6 +5,7 @@ const command_register = require("./command_register")
 const listener_register = require("./listener_register")
 const db = require("./utils/db")
 const setting = require("./setting")
+const send_system_log = require("./commons/send_system_log");
 require("dotenv-safe").config();
 
 
@@ -23,7 +24,7 @@ process.on("exit", ()=>{
 process.on("SIGINT", ()=>{
     process.exit(0);
 });
-
+send_system_log.init(client)
 
 db.init().then(r=>{
     setting.init().then(rr=> {
@@ -39,19 +40,12 @@ client.once("ready", async (c) =>{
     listener_register(client)
     await command_register(client);
 
-    const system_log_channel_id = await setting.get_value(setting.setting_value.SYSTEM_LOG_CHANNEL_ID)
+    const embed = new EmbedBuilder()
+        .setTitle("面接BOTが起動しました")
+        .setColor('#06f919')
+        .setTimestamp()
 
-    if(system_log_channel_id){
-        const system_log_channel = await client.channels.fetch(system_log_channel_id);
-
-        const embed = new EmbedBuilder()
-            .setTitle("面接BOTが起動しました")
-            .setColor('#06f919')
-            .setTimestamp()
-
-        await system_log_channel.send({embeds: [embed]})
-    }
-
+    await send_system_log.send_embed_to_system_log_channel(embed)
 })
 
 

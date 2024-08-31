@@ -2,6 +2,7 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { add_controlling_channel } = require("../commons/controlling-channel")
 const { ChannelType } = require("discord-api-types/payloads/v10")
 const ControllingChannelState = require("../utils/controlling_channel_state")
+const { send_embed_to_system_log_channel } = require("../commons/send_system_log")
 const { ErrorMessage } = require("../utils/error_message");
 
 module.exports = {
@@ -43,6 +44,7 @@ module.exports = {
                 .setTimestamp()
 
             await interaction.reply({embeds: [embed], ephemeral: true});
+            await send_embed_to_system_log_channel(embed)
         }catch (e) {
             console.error(e)
 

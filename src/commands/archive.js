@@ -30,6 +30,8 @@ module.exports = {
                 .setTimestamp()
 
             await interaction.reply({embeds: [embed], ephemeral: true});
+            await interaction.reply({embeds: [embed], ephemeral: true})
+            await send_embed_to_system_log_channel(embed)
         }catch (e) {
             console.error(e)
 

@@ -11,6 +11,7 @@ const {set_interviewee_permission, set_bot_permission, set_common_permission, se
 const {PermissionActions, PermissionNodes, get_permission_node_command_choices_format } = require("../utils/permission")
 const Group = require("../utils/group");
 const Setting = require("../setting");
+const { send_embed_to_system_log_channel } = require("../commons/send_system_log");
 
 
 const set_interviewee_permission_subcommand = {
@@ -53,7 +54,8 @@ const set_interviewee_permission_subcommand = {
                 .setColor('#a7f1a9')
                 .setTimestamp()
 
-            await interaction.reply({embeds: [embed], ephemeral: true});
+            await interaction.reply({embeds: [embed], ephemeral: true})
+            await send_embed_to_system_log_channel(embed)
         }catch (e) {
             const embed = new EmbedBuilder()
                 .setTitle("エラーが発生しました")
@@ -107,7 +109,8 @@ const set_bot_permission_subcommand = {
                 .setColor('#a7f1a9')
                 .setTimestamp()
 
-            await interaction.reply({embeds: [embed], ephemeral: true});
+            await interaction.reply({embeds: [embed], ephemeral: true})
+            await send_embed_to_system_log_channel(embed)
         }catch (e) {
             const embed = new EmbedBuilder()
                 .setTitle("エラーが発生しました")
@@ -168,7 +171,8 @@ const set_common_user_permission_subcommand = {
                 .setColor('#a7f1a9')
                 .setTimestamp()
 
-            await interaction.reply({embeds: [embed], ephemeral: true});
+            await interaction.reply({embeds: [embed], ephemeral: true})
+            await send_embed_to_system_log_channel(embed)
         }catch (e) {
             const embed = new EmbedBuilder()
                 .setTitle("エラーが発生しました")
@@ -229,7 +233,8 @@ const set_common_role_permission_subcommand = {
                 .setColor('#a7f1a9')
                 .setTimestamp()
 
-            await interaction.reply({embeds: [embed], ephemeral: true});
+            await interaction.reply({embeds: [embed], ephemeral: true})
+            await send_embed_to_system_log_channel(embed)
         }catch (e) {
             const embed = new EmbedBuilder()
                 .setTitle("エラーが発生しました")
@@ -297,7 +302,8 @@ const set_group_permission_subcommand = {
                 .setColor('#a7f1a9')
                 .setTimestamp()
 
-            await interaction.reply({embeds: [embed], ephemeral: true});
+            await interaction.reply({embeds: [embed], ephemeral: true})
+            await send_embed_to_system_log_channel(embed)
         }catch (e) {
             console.error(e)
             const embed = new EmbedBuilder()
@@ -346,7 +352,8 @@ const clone_permissions_subcommand = {
                 .setColor('#a7f1a9')
                 .setTimestamp()
 
-            await interaction.reply({embeds: [embed], ephemeral: true});
+            await interaction.reply({embeds: [embed], ephemeral: true})
+            await send_embed_to_system_log_channel(embed)
         }catch (e) {
             console.error(e)
             const embed = new EmbedBuilder()

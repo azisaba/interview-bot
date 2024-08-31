@@ -3,6 +3,8 @@ const create_interview_channel = require("../commons/create_interview_channel")
 const Group = require("../utils/group")
 const {ErrorMessage} = require("../utils/error_message");
 const { ErrorMessage } = require("../utils/error_message");
+const { ErrorMessage } = require("../utils/error_message");
+const  {send_embed_to_system_log_channel } = require("../commons/send_system_log");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -50,6 +52,7 @@ module.exports = {
             .setColor('#9aec9f')
             .setTimestamp()
 
-        await interaction.reply({embeds: [embed], ephemeral: true});
+        await interaction.reply({embeds: [embed], ephemeral: true})
+        await send_embed_to_system_log_channel(embed)
     },
 };

@@ -3,6 +3,7 @@ const { remove_archived_channel } = require("../commons/remove_archived_channel"
 const { ChannelType } = require("discord-api-types/payloads/v10")
 const { ErrorMessage } = require("../utils/error_message");
 const setting = require("../setting");
+const { send_embed_to_system_log_channel } = require("../commons/send_system_log");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -36,10 +37,7 @@ module.exports = {
             await remove_archived_channel(target_channel)
 
             embed.setTitle("チャンネルを削除しました。")
-
-            const system_log_channel_id = await setting.get_value(setting.setting_value.SYSTEM_LOG_CHANNEL_ID)
-            const system_log_channel = await target_channel.guild.channels.fetch(system_log_channel_id)
-            await system_log_channel.send({embeds: [embed]})
+            await send_embed_to_system_log_channel(embed)
 
         }catch (e) {
             console.error(e)

@@ -2,6 +2,7 @@ const { SlashCommandBuilder, SlashCommandSubcommandBuilder, EmbedBuilder} = requ
 const { ChannelType } = require("discord-api-types/payloads/v10")
 const Group = require("../utils/group")
 const Setting = require("../setting")
+const { send_embed_to_system_log_channel } = require("../commons/send_system_log");
 
 
 const add_group_subcommand = {
@@ -45,7 +46,8 @@ const add_group_subcommand = {
                 .setColor('#a7f1a9')
                 .setTimestamp()
 
-            await interaction.reply({embeds: [embed], ephemeral: true});
+            await interaction.reply({embeds: [embed], ephemeral: true})
+            await send_embed_to_system_log_channel(embed)
         }catch (e) {
             const embed = new EmbedBuilder()
                 .setTitle("エラーが発生しました")
@@ -111,7 +113,8 @@ const remove_group_subcommand = {
             .setColor('#f3ad9d')
             .setTimestamp()
 
-        await interaction.reply({embeds: [embed], ephemeral: true});
+        await interaction.reply({embeds: [embed], ephemeral: true})
+        await send_embed_to_system_log_channel(embed)
     },
 }
 
@@ -155,7 +158,8 @@ const set_channel_subcommand = {
                     .setColor('#a7f1a9')
                     .setTimestamp()
 
-                await interaction.reply({embeds: [embed], ephemeral: true});
+                await interaction.reply({embeds: [embed], ephemeral: true})
+                await send_embed_to_system_log_channel(embed)
             } else {
                 const embed = new EmbedBuilder()
                     .setTitle("エラーが発生しました")
@@ -200,7 +204,8 @@ const set_announce_message_subcommand = {
                 .setColor('#a7f1a9')
                 .setTimestamp()
 
-            await interaction.reply({embeds: [embed], ephemeral: true});
+            await interaction.reply({embeds: [embed], ephemeral: true})
+            await send_embed_to_system_log_channel(embed)
         }catch (e) {
             const embed = new EmbedBuilder()
                 .setTitle("エラーが発生しました")
