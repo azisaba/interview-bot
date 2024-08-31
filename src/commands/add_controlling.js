@@ -8,7 +8,7 @@ const {ErrorMessage} = require("../utils/error_message");
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('add-rcontrolling')
+        .setName('add-controlling')
         .setDescription('管理対象のチャンネルを追加します。')
         .addChannelOption(option=>
             option.setName("channel")
