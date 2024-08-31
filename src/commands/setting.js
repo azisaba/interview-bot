@@ -35,7 +35,7 @@ const add_group_subcommand = {
         }
 
         try{
-            Group.set(sign, name)
+            await Group.set(sign, name)
 
             const embed = new EmbedBuilder()
                 .setTitle("グループが追加されました。")
@@ -57,7 +57,6 @@ const add_group_subcommand = {
 
             await interaction.reply({embeds: [embed], ephemeral: true});
         }
-
     },
 }
 
