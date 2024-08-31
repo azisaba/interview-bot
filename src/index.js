@@ -29,7 +29,7 @@ send_system_log.init(client)
 db.init().then(r=>{
     setting.init().then(rr=> {
         if(debug_mode) require("./dev")()
-        else require("./utils/initial_value")
+        else require("./utils/initial_value")()
     })
 })
 
