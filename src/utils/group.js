@@ -10,6 +10,12 @@ const no_use_word = ["common", "interviewee", "bot"]
 const set = (sign, name)=> {
     if(no_use_word.includes(name.toLowerCase()) || no_use_word.includes(sign.toLowerCase())) throw new Error();
     db.execute(`INSERT INTO groups(sign, name) VALUES (?,?)`, [sign, name])
+const set = async (sign, name)=> {
+
+    const records = await db.get_all(`SELECT * FROM groups WHERE sign=? OR name=?`, [sign, name])
+
+    if(records.length === 0) db.execute(`INSERT INTO groups(sign, name) VALUES (?,?)`, [sign, name])
+    else db.execute(`UPDATE groups SET name=? WHERE sign=?`,[name, sign])
 }
 
 /**
