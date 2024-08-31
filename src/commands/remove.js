@@ -24,7 +24,7 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setTitle("5秒後にチャンネルを削除します。")
                 .setFields(
-                    {name: "チャンネル", value: `${target_channel.name}`},
+                    {name: "チャンネル", value: `${target_channel.name}\n(${target_channel.id})`},
                 )
                 .setColor('#f3ad9d')
                 .setTimestamp()
