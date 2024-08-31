@@ -79,12 +79,18 @@ const create_interview_channel = async (client, interviewee, target_group)=>{
             0
         )
 
+        const message = (await Setting.get_value(Setting.setting_value.INTERVIEW_CHANNEL_ANNOUNCEMENT_MESSAGE))
+            ?.replace(/{interviewee}/g, `<@${interviewee.id}>`)
+            ?.replace(/{group}/g, `${target_group}`)
+            ?.replace(/{channel}/g, `<#${channel.id}>`)
+
         const embed = new EmbedBuilder()
-            .setDescription(await Setting.get_value(Setting.setting_value.INTERVIEW_CHANNEL_ANNOUNCEMENT_MESSAGE))
+            .setDescription(message.replace(/\\n/g, `
+            `))
             .setColor('#e2b4ee')
             .setTimestamp()
 
-        await channel.send({embeds: [embed]})
+        await channel.send({content: `<@${interviewee.id}>さんの面接チャンネルが作成されました。`,embeds: [embed]})
 
         db.execute(`INSERT INTO channels(channel_id, state) VALUES (?,?)`, [channel.id, ControllingChannelState.ACTIVE])
 
