@@ -17,7 +17,7 @@ module.exports = {
             option.setName("state")
                 .setDescription("状態を指定します。(指定していない場合はアクティブ)")
                 .addChoices(
-                    { name: 'アクティブ「', value: ControllingChannelState.ACTIVE},
+                    { name: 'アクティブ', value: ControllingChannelState.ACTIVE},
                     { name: '非アクティブ', value: ControllingChannelState.INACTIVE },
                 )
         ),
