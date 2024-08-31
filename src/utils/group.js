@@ -1,7 +1,7 @@
 const db = require("../utils/db")
 const {ErrorMessage, ErrorCode} = require("./error_message");
 
-const no_use_word = ["common", "interviewee"]
+const no_use_word = ["common", "interviewee", "bot"]
 /**
  *
  * @param {string} sign
