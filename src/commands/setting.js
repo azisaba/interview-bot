@@ -179,16 +179,53 @@ const set_channel_subcommand = {
 };
 
 
+const set_announce_message_subcommand = {
+    data: new SlashCommandSubcommandBuilder()
+        .setName('set-announce-message')
+        .setDescription('面接チャンネル作成時に送信されるメッセージの設定を行います。')
+        .addStringOption(option=>
+            option.setName("message")
+                .setDescription("メッセージ内容")
+                .setRequired(true)
+        ),
+    async execute(interaction) {
+        const message = interaction.options.getString('message')
+        try {
+            Setting.set_value(Setting.setting_value.INTERVIEW_CHANNEL_ANNOUNCEMENT_MESSAGE, message)
+            const embed = new EmbedBuilder()
+                .setTitle("メッセージを設定しました。")
+                .setFields(
+                    {name: "メッセージ内容", value: message},
+                )
+                .setColor('#a7f1a9')
+                .setTimestamp()
+
+            await interaction.reply({embeds: [embed], ephemeral: true});
+        }catch (e) {
+            const embed = new EmbedBuilder()
+                .setTitle("エラーが発生しました")
+                .setDescription(e.toString())
+                .setColor('#ea5a59')
+                .setTimestamp()
+
+            await interaction.reply({embeds: [embed], ephemeral: true});
+        }
+    },
+};
+
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('setting')
         .setDescription('設定の変更を行います。')
         .addSubcommand(add_group_subcommand.data)
         .addSubcommand(remove_group_subcommand.data)
-        .addSubcommand(set_channel_subcommand.data),
+        .addSubcommand(set_channel_subcommand.data)
+        .addSubcommand(set_announce_message_subcommand.data),
     async execute(interaction) {
         if (interaction.options.getSubcommand() === 'add-group') await add_group_subcommand.execute(interaction)
         if (interaction.options.getSubcommand() === 'remove-group') await remove_group_subcommand.execute(interaction)
         if (interaction.options.getSubcommand() === 'set-channel') await set_channel_subcommand.execute(interaction)
+        if (interaction.options.getSubcommand() === 'set-announce-message') await set_announce_message_subcommand.execute(interaction)
     },
 };
