@@ -1,8 +1,9 @@
-const { Client, CategoryChannel, PermissionsBitField, OverwriteData, TextChannel, User,Collection, EmbedBuilder} = require("discord.js")
+const { Client, CategoryChannel, OverwriteData, TextChannel, User,Collection, EmbedBuilder} = require("discord.js")
 const ChannelOperation = require("../utils/channel")
 const Setting = require("../setting")
 const db = require("../utils/db")
 const Group = require("../utils/group")
+const {PermissionNodes} = require("../utils/permission")
 const ControllingChannelState = require("../utils/controlling_channel_state")
 const { ErrorMessage, ErrorCode } = require("../utils/error_message")
 
@@ -61,6 +62,17 @@ const create_interview_channel = async (client, interviewee, target_group)=>{
 
         permission_building_object.set(v["target_id"], obj)
     })
+
+    const guild = parent_category.guild
+
+    permission_building_object.set(
+        "everyone",
+        {
+            id: guild.roles.everyone,
+            allow: [],
+            deny: [PermissionNodes.ViewChannel]
+        }
+    )
 
     /**
      * @type {OverwriteData[]}

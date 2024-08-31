@@ -15,7 +15,7 @@ if (debug_mode) {
     process.env.DEBUG = "interview-bot:*"
 }
 
-const client = new Client({intents:[]})
+const client = new Client({intents:[GatewayIntentBits.Guilds]})
 
 process.on("exit", ()=>{
     client.destroy();
