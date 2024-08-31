@@ -21,6 +21,7 @@ const ErrorCode = {
     NotExistChannel: "NotExistChannel",
     NotExistGroupSign: "NotExistGroupSign",
     AlreadyArchivedChannel: "AlreadyArchivedChannel",
+    NotArchivedChannel: "NotArchivedChannel",
     NotAllowedWord: "NotAllowedWord"
 }
 
