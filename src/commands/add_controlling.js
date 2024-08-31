@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { add_controlling_channel } = require("../commons/controlling-channel")
 const { ChannelType } = require("discord-api-types/payloads/v10")
+const { add_controlling_channel } = require("../commons/controlling-channel")
 const ControllingChannelState = require("../utils/controlling_channel_state")
 const { send_embed_to_system_log_channel } = require("../commons/send_system_log")
 const { ErrorMessage } = require("../utils/error_message");
@@ -36,7 +36,7 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setTitle("チャンネルを管理対象に追加しました。")
                 .setFields(
-                    {name: "チャンネル", value: `<#${target_channel.id}>`},
+                    {name: "チャンネル", value: `<#${target_channel.id}>\n(${target_channel.name} = ${target_channel.id})`},
                     {name: "状態", value: `${state===ControllingChannelState.ACTIVE ? "アクティブ" : "非アクティブ"}`},
                     {name: " ", value: `※権限等の設定はされませんので、手動で行ってください。`},
                 )
