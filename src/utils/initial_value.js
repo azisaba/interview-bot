@@ -5,12 +5,12 @@ const setting = require("../setting")
 
 
 module.exports = ()=>{
-    db.execute(`INSERT INTO setting_values(key, value) VALUES (?,?)`,
-        [setting.setting_value.INTERVIEW_CHANNEL_ANNOUNCEMENT_MESSAGE,
+    db.execute(`UPDATE setting_values SET value=? WHERE key=?`, [
             `こんにちは、{interviewee}さん！アジ鯖運営の面接にお越しいただきありがとうございます。\n
             面接は、このチャンネル({channel})で、{group}の担当者が行います。\n\n
             最初に、「MCID」、「年齢」、「現職」(学生or社会人)をご記入いただき、担当者からのメッセージをお待ちください。\n\n
-            担当者は面接日と時間の記入を分かりやすい形で必ず行ってください\n例: 2023/01/01 00:00:00 面接開始`
+            担当者は面接日と時間の記入を分かりやすい形で必ず行ってください\n例: 2023/01/01 00:00:00 面接開始`,
+            setting.setting_value.INTERVIEW_CHANNEL_ANNOUNCEMENT_MESSAGE
         ]
     )
 
