@@ -47,7 +47,7 @@ const set_group_permission = async (permission, action, group, target_id, type)=
     const group_sign = await Group.get_sign(group)
     if(!group_sign) throw new ErrorMessage(ErrorCode.NotExistGroupSign, `not found Sign with the given "${group}"`)
 
-    await set_permission(permission, action, group,target_id, type)
+    await set_permission(permission, action, group_sign, target_id, type)
 }
 
 
@@ -96,7 +96,7 @@ const set_all_group_permission = async (action, group, target_id, type)=>{
     if(!group_sign) throw new ErrorMessage(ErrorCode.NotExistGroupSign, `not found Sign with the given "${group}"`)
 
     for(let node in PermissionNodes) {
-        await set_permission(node, action, group, target_id, type)
+        await set_permission(node, action, group_sign, target_id, type)
     }
 }
 
